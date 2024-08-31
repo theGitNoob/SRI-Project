@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "sri-project"
+version = "0.1.0"
+description = ""
+authors = ["Rafael Acosta <theGitNoob@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.11.2"
+ruff = "^0.6.3"
+black = "^24.8.0"
+isort = "^5.13.2"
+pre-commit = "^3.8.0"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+no_implicit_optional = true
+warn_return_any = true
+show_error_codes = true
+warn_unused_ignores = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
