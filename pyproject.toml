@@ -5,8 +5,23 @@ description = ""
 authors = ["Rafael Acosta <theGitNoob@gmail.com>"]
 readme = "README.md"
 
+[[tool.poetry.source]]
+name = "nexus"
+url = "http://nexus.prod.uci.cu/repository/pypi-proxy/simple/"
+priority = "supplemental"
+
+
 [tool.poetry.dependencies]
 python = "^3.12"
+pydantic = "^2.8.2"
+torch = "^2.4.0"
+faiss-cpu = "^1.8.0.post1"
+scikit-learn = "^1.5.1"
+datasets = "^2.21.0"
+transformers = "^4.44.2"
+rank-bm25 = "^0.2.2"
+nltk = "^3.9.1"
+matplotlib = "^3.9.2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.11.2"
