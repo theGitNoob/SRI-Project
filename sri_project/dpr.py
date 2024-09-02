@@ -1,8 +1,7 @@
-from numpy import ndarray
 import torch
+from dpr_models import context_encoder, context_tokenizer, question_encoder, question_tokenizer
 from faiss import IndexFlatIP
-from dataset_loader import queries, corpus
-from dpr_models import *
+from numpy import ndarray
 
 
 def encode_passages(passages: list[str], max_length: int = 512) -> ndarray:
@@ -84,5 +83,5 @@ def retrieve_top_k_passages(index: IndexFlatIP, query: str, k: int = 3) -> tuple
     Returns:
         list: A list of passage indices representing the top k passages.
     """
-    D, I = index.search(encode_query(query), k)
-    return D[0], I[0]
+    D, results = index.search(encode_query(query), k)
+    return D[0], results[0]

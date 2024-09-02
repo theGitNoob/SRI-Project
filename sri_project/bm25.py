@@ -1,7 +1,6 @@
 import nltk
 from nltk.tokenize import word_tokenize
 from rank_bm25 import BM25Okapi
-from sklearn.feature_extraction.text import CountVectorizer
 
 # Download NLTK data files (e.g., tokenizers)
 nltk.download("punkt")

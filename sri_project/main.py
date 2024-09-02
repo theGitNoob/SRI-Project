@@ -1,10 +1,10 @@
 import os
-import matplotlib.pyplot as plt
-from bm25 import bm25_retrieve, init_bm25
-from sri_project.dpr import retrieve_top_k_passages, create_index
-from eval import exact_match_ratio
-from dataset_loader import queries, corpus
 
+from bm25 import bm25_retrieve, init_bm25
+from dataset_loader import corpus, queries
+from eval import exact_match_ratio
+
+from sri_project.dpr import create_index, retrieve_top_k_passages
 
 dpr_index = create_index(corpus[:100])
 bm25 = init_bm25(corpus[:100])
