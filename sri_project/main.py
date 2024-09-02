@@ -4,7 +4,6 @@ from bm25 import bm25_retrieve, init_bm25
 from sri_project.dpr import retrieve_top_k_passages, create_index
 from eval import exact_match_ratio
 from dataset_loader import queries, corpus
-from sri_project.utils import plot
 
 
 dpr_index = create_index(corpus[:100])
