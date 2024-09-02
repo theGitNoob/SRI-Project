@@ -1,6 +1,6 @@
 import torch
-from dpr_models import context_encoder, context_tokenizer, question_encoder, question_tokenizer
 from faiss import IndexFlatIP
+from .dpr_models import context_encoder, context_tokenizer, question_encoder, question_tokenizer
 from numpy import ndarray
 
 
@@ -33,7 +33,6 @@ def create_faiss_index(embeddings: ndarray) -> IndexFlatIP:
 
     """
     dimension = embeddings.shape[1]
-    print(f"Creating Faiss index with dimension: {embeddings.shape}")
     index = IndexFlatIP(dimension)
     index.add(embeddings)
     return index

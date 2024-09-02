@@ -25,6 +25,7 @@ fi
 echo "Installing dependencies..."
 poetry install
 
+
 # Run the project
 echo "Running the project..."
 poetry run python sri_project/main.py
