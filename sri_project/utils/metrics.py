@@ -80,3 +80,22 @@ def exact_match_ratio(answers: list[int]) -> float:
         if idx == ans:
             count += 1
     return count / len(answers)
+
+
+def recall_at_k(answers: list[int], match_list: list[list[int]], k: int) -> float:
+    """
+    Calculates the recall at k for a given list of answers.
+
+    Parameters:
+    answers (list[int]): A list of answers where each element represents the index of the correct answer.
+    match_list (list[list[int]]): A list of lists where each inner list contains the indices of the matched documents.
+    k (int): The number of documents to consider for calculating recall.
+
+    Returns:
+    float: The recall at k, which is the ratio of the number of correct answers found in the top k documents to the total number of answers.
+    """
+    count = 0
+    for i in range(len(answers)):
+        if answers[i] in match_list[i][:k]:
+            count += 1
+    return count / len(answers)
