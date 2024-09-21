@@ -2,12 +2,13 @@
 
 ## Autores
 
-- Rafael Acoosta Márquez
+- Rafael Acosta Márquez
 - Esiler F. Valles Rodríguez
 - Jorge Alejandro Pichardo Cabrera
 
 ## Problema
 
+TODO:  
 Descripción del problema que el proyecto intenta resolver.
 
 ## Requerimientos
