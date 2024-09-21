@@ -1,9 +1,31 @@
-from datasets import load_dataset
+import pandas as pd
+from collections import defaultdict
 
-# Load the TriviaQA dataset from Hugging Face
+# Load the CSV file
+csv_file = "sri_project/data/data.csv"
+data = pd.read_csv(csv_file)
 
-dataset = load_dataset("toughdata/quora-question-answer-dataset")
+# Initialize a dictionary to hold the grouped data
+grouped_data = defaultdict(lambda: {"question": "", "answers": []})
 
-# Extract passages (answers) and queries (questions)
-corpus = [item["answer"] for item in dataset["train"]]
-queries = [item["question"] for item in dataset["train"]]
+queries = []
+corpus = []
+
+for _, row in data.iterrows():
+    question_id = row["question_id"]
+    question = row["question"]
+    answer = row["answer"]
+
+    corpus.append(answer)
+    queries.append(question)
+
+    # Update the dictionary
+    grouped_data[question_id]["question"] = question
+    grouped_data[question_id]["answers"].append(answer)
+
+# Convert defaultdict to a regular dictionary
+grouped_data = dict(grouped_data)
+
+
+# Delete repeated questions
+queries = list(set(queries))
