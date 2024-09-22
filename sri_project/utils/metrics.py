@@ -32,10 +32,12 @@ def evaluate_performance(data, queries: list[str], bm25, dpr_index, query_index:
     for i in range(len(queries)):
         if query_index is not None and i != query_index:
             continue
+        if i == 30:
+            break
 
         query = queries[i]
 
-        k = 10
+        k = 5
 
         # BM25 evaluation
         start_time = time.time()
@@ -68,15 +70,15 @@ def evaluate_performance(data, queries: list[str], bm25, dpr_index, query_index:
 
         reranking_match_list = []
 
-        for index, doc, score in list(zip(bm25_results, docs, bm25_scores)):
-            doc_embedding = encode_query(doc)
+        for idx in range(len(docs)):
+            doc_embedding = encode_query(docs[idx])
             similarity = cosine_similarity(query_embedding, doc_embedding)
             if similarity < 0.7:
                 continue
-            combined_score = 0.7 * similarity + (1 - 0.7) * score
-            reranking_match_list.append((index, doc, combined_score))
+            combined_score = 0.7 * similarity + (1 - 0.7) * bm25_scores[idx]
+            reranking_match_list.append((bm25_results[idx], combined_score))
 
-        reranking_match_list = sorted(reranking_match_list, key=lambda x: x[2], reverse=True)[:k]
+        reranking_match_list = sorted(reranking_match_list, key=lambda x: x[1], reverse=True)[:k]
         reranking_result_indices = [x[0] for x in reranking_match_list]
         retrieved_docs[2].append(get_retrieved_docs(reranking_result_indices))
 
