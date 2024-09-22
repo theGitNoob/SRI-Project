@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from collections import defaultdict
 
@@ -11,21 +12,33 @@ grouped_data = defaultdict(lambda: {"question": "", "answers": []})
 queries = []
 corpus = []
 
+used_ids = set()
+used_answers = set()
+
+id = -1
 for _, row in data.iterrows():
     question_id = row["question_id"]
+
     question = row["question"]
     answer = row["answer"]
+    label = row["label"]
 
-    corpus.append(answer)
-    queries.append(question)
+    if question_id not in used_ids:
+        used_ids.add(question_id)
+        queries.append(row["question"])
+
+    question_id = len(used_ids) - 1
+
+    if answer not in used_answers:
+        used_answers.add(answer)
+        corpus.append(answer)
+        id += 1
 
     # Update the dictionary
     grouped_data[question_id]["question"] = question
-    grouped_data[question_id]["answers"].append(answer)
-
-# Convert defaultdict to a regular dictionary
-grouped_data = dict(grouped_data)
+    # if label == 1:
+    grouped_data[question_id]["answers"].append(id)
 
 
-# Delete repeated questions
-queries = list(set(queries))
+# clear console
+os.system("clear")

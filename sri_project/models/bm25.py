@@ -18,11 +18,11 @@ def init_bm25(corpus: list[str]) -> BM25Okapi:
     - BM25Okapi: The initialized BM25 model.
 
     """
-    tokenized_corpus = [word_tokenize(doc.lower()) for doc in corpus[:100]]  # Limiting to 100 documents for simplicity
+    tokenized_corpus = [word_tokenize(doc.lower()) for doc in corpus]
     return BM25Okapi(tokenized_corpus)
 
 
-def bm25_retrieve(query: str, bm25: BM25Okapi, top_k: int = 3) -> list[int]:
+def bm25_retrieve(query: str, bm25: BM25Okapi, top_k: int = 3) -> tuple[list[int], list[float]]:
     """
     Retrieve the top-k indices of documents based on the BM25 scores for a given query.
 
@@ -36,5 +36,8 @@ def bm25_retrieve(query: str, bm25: BM25Okapi, top_k: int = 3) -> list[int]:
     """
     tokenized_query = word_tokenize(query.lower())
     scores = bm25.get_scores(tokenized_query)
-    top_k_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:top_k]
-    return top_k_indices
+    top_k_indices = sorted(zip(range(len(scores)), scores), key=lambda x: x[1], reverse=True)[:top_k]
+
+    scores = [x[1] for x in top_k_indices]
+    top_k_indices = [x[0] for x in top_k_indices]
+    return top_k_indices, scores
