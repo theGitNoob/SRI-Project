@@ -24,6 +24,7 @@ nltk = "^3.9.1"
 matplotlib = "^3.9.2"
 psutil = "^6.0.0"
 pandas = "^2.2.3"
+gradio = "^4.44.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.11.2"
