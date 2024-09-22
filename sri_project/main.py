@@ -41,7 +41,7 @@ def main():
 
     # Indexes initialization
     global bm25, dpr_index
-    bm25, dpr_index = initialize_indexes(corpus[:50])
+    bm25, dpr_index = initialize_indexes(corpus)
 
     # Performance evaluation
     run_whole_evaluation(bm25, dpr_index)
@@ -69,34 +69,34 @@ def plot(times, recall_values, precision_values):
     # Plotting and saving the results
     charts = [
         plot_and_save_graph(
-            x=times[0],
+            x=list(range(len(times[0]))),
             y1=times[0],
             y2=times[1],
             y3=times[2],
             xlabel="Consultas",
             ylabel="Tiempo (s)",
             title="Comparación de Tiempo de Cómputo entre BM25, DPR y Reranking",
-            filename="tiempo_computo_comparacion",
+            filename="time_comparation",
         ),
         plot_and_save_graph(
-            x=recall_values[0],
+            x=list(range(len(recall_values[0]))),
             y1=recall_values[0],
             y2=recall_values[1],
             y3=recall_values[2],
             xlabel="Consultas",
             ylabel="Recall",
             title="Comparación de Recall entre BM25, DPR y Reranking",
-            filename="recall_comparacion",
+            filename="recall_comparation",
         ),
         plot_and_save_graph(
-            x=precision_values[0],
+            x=list(range(len(precision_values[0]))),
             y1=precision_values[0],
             y2=precision_values[1],
             y3=precision_values[2],
             xlabel="Consultas",
             ylabel="Precision",
             title="Comparación de Precision entre BM25, DPR y Reranking",
-            filename="precision_comparacion",
+            filename="precision_comparation",
         ),
     ]
 
