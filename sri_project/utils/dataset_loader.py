@@ -1,6 +1,7 @@
 import os
-import pandas as pd
 from collections import defaultdict
+
+import pandas as pd
 
 # Load the CSV file
 csv_file = "sri_project/data/data.csv"

@@ -1,13 +1,10 @@
-import time
 from typing import Literal
 
-from matplotlib import pyplot as plt
-import numpy as np
 import gradio as gr
 
+from sri_project.utils.dataset_loader import corpus, grouped_data, queries
 from sri_project.utils.metrics import evaluate_performance
 from sri_project.utils.plot import plot_and_save_graph, plot_comparison
-from sri_project.utils.dataset_loader import corpus, queries, grouped_data
 from sri_project.utils.utils import initialize_indexes
 
 

@@ -1,8 +1,9 @@
 import numpy
 import torch
 from faiss import IndexFlatIP
-from .dpr_models import context_encoder, context_tokenizer, question_encoder, question_tokenizer
 from numpy import ndarray
+
+from .dpr_models import context_encoder, context_tokenizer, question_encoder, question_tokenizer
 
 
 def encode_passages(passages: list[str], max_length: int = 1024, batch_size: int = 10000) -> ndarray:

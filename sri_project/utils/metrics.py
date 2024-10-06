@@ -1,11 +1,9 @@
-import os
 import time
-import psutil
+
 from torch import cosine_similarity
 
 from sri_project.models.bm25 import bm25_retrieve
-from sri_project.models.dpr import create_index, encode_query, retrieve_top_k_passages
-from sri_project.utils.dataset_loader import corpus
+from sri_project.models.dpr import encode_query, retrieve_top_k_passages
 from sri_project.utils.utils import get_retrieved_docs
 
 
