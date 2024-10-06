@@ -8,8 +8,9 @@
 
 ## Problema
 
-TODO:  
-Descripción del problema que el proyecto intenta resolver.
+Este proyecto es un sistema de recuperación de información que utiliza modelos de recuperación BM25 y DPR, así como un método de reranking para mejorar la precisión de las búsquedas. Está diseñado para evaluar y comparar el rendimiento de estos modelos en términos de tiempo de ejecución, precisión y recall. Utiliza Python y Poetry para la gestión de dependencias y está optimizado para ejecutarse en sistemas operativos Linux.
+
+
 
 ## Requerimientos
 
