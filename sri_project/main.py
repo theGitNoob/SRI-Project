@@ -40,7 +40,7 @@ def main():
     # Indexes initialization
     global bm25, dpr_index
 
-    if "--interactive" or "-i" in sys.argv[1]:
+    if {"--interactive", "-i"} & set(sys.argv):
         bm25, dpr_index = initialize_indexes(corpus[:100])
         # Initialize the Gradio interface
         interface = setup_interface()
