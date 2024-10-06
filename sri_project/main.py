@@ -37,6 +37,10 @@ def main():
     sets up the Gradio interface, and launches it.
     """
 
+    # Indexes initialization
+    global bm25, dpr_index
+    bm25, dpr_index = initialize_indexes(corpus)
+
     if "--interactive" or "-i" in sys.argv[1]:
         # Initialize the Gradio interface
         interface = setup_interface()
@@ -44,10 +48,6 @@ def main():
         # Launch the interface if interactive-mode is set in args
         interface.launch()
     else:
-
-        # Indexes initialization
-        global bm25, dpr_index
-        bm25, dpr_index = initialize_indexes(corpus)
 
         # Performance evaluation
         run_whole_evaluation(bm25, dpr_index)
