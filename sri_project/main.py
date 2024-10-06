@@ -141,8 +141,8 @@ def search(query: str, model: Literal["BM25", "DPR", "Reranking"]):
             None,
             "Tiempo (s)",
             "Memoria (MB)",
-            "Comparación de Tiempo de Cómputo y Uso de Memoria entre BM25, DPR y Reranking",
-            "img/tiempo_memoria_comparacion.png",
+            "Comparación de Tiempo de Cómputo entre BM25, DPR y Reranking",
+            "img/tiempo__comparacion.png",
         ),
     ]
     idx = 0
