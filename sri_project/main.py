@@ -1,3 +1,4 @@
+import sys
 from typing import Literal
 
 import gradio as gr
@@ -36,18 +37,20 @@ def main():
     sets up the Gradio interface, and launches it.
     """
 
-    # Indexes initialization
-    global bm25, dpr_index
-    bm25, dpr_index = initialize_indexes(corpus)
+    if "--interactive" or "-i" in sys.argv[1]:
+        # Initialize the Gradio interface
+        interface = setup_interface()
 
-    # Performance evaluation
-    run_whole_evaluation(bm25, dpr_index)
+        # Launch the interface if interactive-mode is set in args
+        interface.launch()
+    else:
 
-    # Initialize the Gradio interface
-    interface = setup_interface()
+        # Indexes initialization
+        global bm25, dpr_index
+        bm25, dpr_index = initialize_indexes(corpus)
 
-    # Launch the interface
-    interface.launch()
+        # Performance evaluation
+        run_whole_evaluation(bm25, dpr_index)
 
 
 def plot(times, recall_values, precision_values):
