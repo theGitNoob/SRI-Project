@@ -39,9 +39,9 @@ def main():
 
     # Indexes initialization
     global bm25, dpr_index
-    bm25, dpr_index = initialize_indexes(corpus)
 
     if "--interactive" or "-i" in sys.argv[1]:
+        bm25, dpr_index = initialize_indexes(corpus[:100])
         # Initialize the Gradio interface
         interface = setup_interface()
 
@@ -50,6 +50,7 @@ def main():
     else:
 
         # Performance evaluation
+        bm25, dpr_index = initialize_indexes(corpus)
         run_whole_evaluation(bm25, dpr_index)
 
 
@@ -160,9 +161,12 @@ def search(query: str, model: Literal["BM25", "DPR", "Reranking"]):
     )
 
 
-def setup_interface():
+def setup_interface(queries_limit: int = 100):
     """
     Creates and returns a gr.Interface object for the information retrieval system.
+
+    Args:
+        queries_limit (int): The maximum number of queries to display in the dropdown.
 
     Returns:
         gr.Interface: The interface object for the information retrieval system.
@@ -170,7 +174,7 @@ def setup_interface():
     return gr.Interface(
         fn=search,
         inputs=[
-            gr.Dropdown(choices=queries, label="Selecciona una Consulta"),
+            gr.Dropdown(choices=queries[:queries_limit], label="Selecciona una Consulta"),
             gr.Dropdown(choices=["BM25", "DPR", "Reranking"], label="Modelo de Recuperación"),
         ],
         outputs=[
@@ -179,7 +183,7 @@ def setup_interface():
             gr.Textbox(label="Recall"),
             gr.Textbox(label="Tiempo de Ejecución"),
             gr.Image(type="filepath", label="Gráfica de Comparación de Precision y Recall"),
-            gr.Image(type="filepath", label="Gráfica de Comparación de Tiempo de Cómputo y Uso de Memoria"),
+            gr.Image(type="filepath", label="Gráfica de Comparación de Tiempo de Cómputo"),
         ],
         title="Sistema de Recuperación de Información",
         description="Realiza una búsqueda utilizando BM25,DPR y Reranking y compara las métricas de precisión, recall y tiempo de ejecución.",
