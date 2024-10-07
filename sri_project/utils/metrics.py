@@ -28,14 +28,9 @@ def evaluate_performance(data, queries: list[str], bm25, dpr_index, query_index:
     retrieved_docs = [[] for _ in range(3)]
 
     for i in range(len(queries)):
-        if query_index is not None and i != query_index:
-            continue
-        if i == 30:
-            break
-
         query = queries[i]
 
-        k = 5
+        k = 10
 
         # BM25 evaluation
         start_time = time.time()
@@ -85,16 +80,15 @@ def evaluate_performance(data, queries: list[str], bm25, dpr_index, query_index:
         recall_values[2].append(recall_at_k(data[i]["answers"], reranking_result_indices))
         precision_values[2].append(precision_at_k(data[i]["answers"], reranking_result_indices))
 
-    if query_index is not None:
-        print(f"Average Precision for BM25: {sum(precision_values[0]) / len(precision_values[0])}")
-        print(f"Average Precision for DPR: {sum(precision_values[1]) / len(precision_values[1])}")
-        print(f"Average Precision for Reranking: {sum(precision_values[2]) / len(precision_values[2])}")
+    print(f"Average Precision for BM25: {sum(precision_values[0]) / len(precision_values[0])}")
+    print(f"Average Precision for DPR: {sum(precision_values[1]) / len(precision_values[1])}")
+    print(f"Average Precision for Reranking: {sum(precision_values[2]) / len(precision_values[2])}")
 
-        print("-" * 50)
+    print("-" * 50)
 
-        print(f"Average Recall for BM25: {sum(recall_values[0]) / len(recall_values[0])}")
-        print(f"Average Recall for DPR: {sum(recall_values[1]) / len(recall_values[1])}")
-        print(f"Average Recall for Reranking: {sum(recall_values[2]) / len(recall_values[2])}")
+    print(f"Average Recall for BM25: {sum(recall_values[0]) / len(recall_values[0])}")
+    print(f"Average Recall for DPR: {sum(recall_values[1]) / len(recall_values[1])}")
+    print(f"Average Recall for Reranking: {sum(recall_values[2]) / len(recall_values[2])}")
 
     return (times, recall_values, precision_values, retrieved_docs)
 
