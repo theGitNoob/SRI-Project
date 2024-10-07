@@ -3,109 +3,206 @@
 \usepackage{url}
 \usepackage{cite}
 \usepackage{amsmath}
-\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
+\usepackage{float}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]
+{hyperref}
+\hypersetup{ colorlinks=true, citecolor=blue, linkcolor=red, urlcolor=blue , linktoc=all,pdfhighlight=/I }
 
 \begin{document}
 
-\title{Comparación de Sistemas de Recuperación de Información: BM25 vs. DPR}
+\title{Comparación de Sistemas de Recuperación de Información: BM25 vs. DPR vs. Reranking}
 \titlerunning{Comparación de Sistemas de Recuperación de Información}
 \author{Eisler Francisco Valles Rodriguez \and Rafael Acosta Márquez \and Jorge Alejandro Pichardo}
-\authorrunning{Comparación de Sistemas de Recuperación de Información: BM25 vs. DPR}
+\authorrunning{Comparación de Sistemas de Recuperación de Información}
 \institute{Universida de La Habana, La Habana, Cuba}
 
 \maketitle
 
 \begin{abstract}
-Este informe presenta una comparación entre dos sistemas de recuperación de información: BM25, un modelo tradicional sin el uso de inteligencia artificial, y Dense Passage Retrieval (DPR), un modelo moderno que integra técnicas de inteligencia artificial. Se evaluaron ambos sistemas en términos de precisión y eficiencia, utilizando un conjunto de datos de prueba. BM25 se destacó por su simplicidad y velocidad, mientras que DPR mostró una mayor precisión en la recuperación de documentos semánticamente relevantes, aunque a un costo computacional más alto. Se concluye con una discusión sobre las limitaciones de ambos enfoques y propuestas de mejora futuras.
-\keywords{Recuperación de información, BM25, DPR, Inteligencia artificial, Similitud semántica}
+Este trabajo presenta una comparación entre tres sistemas de recuperación de información: BM25, un modelo tradicional sin el uso de inteligencia artificial, Dense Passage Retrieval (DPR), un modelo moderno que integra técnicas de inteligencia artificial, y una estrategia de reranking que combina ambos enfoques. Se evaluaron los sistemas en términos de precisión y eficiencia, utilizando un conjunto de datos de prueba. BM25 se destacó por su simplicidad y velocidad, mientras que DPR mostró una mayor precisión en la recuperación de documentos semánticamente relevantes, aunque a un costo computacional más alto. El reranking permitió una mejora significativa al utilizar BM25 como filtro inicial y DPR para refinar los resultados más relevantes. Se concluye con una discusión sobre las limitaciones de estos enfoques y propuestas de mejora futuras.
+\keywords{Recuperación de información, BM25, DPR, Reranking, Inteligencia artificial, Similitud semántica}
 \end{abstract}
 
 \section{Introducción}
-La recuperación de información es un campo fundamental en la ciencia de la computación, con aplicaciones que van desde motores de búsqueda hasta sistemas de recomendación. Este trabajo compara dos enfoques de recuperación de información: BM25, un método basado en la relevancia de palabras clave, y Dense Passage Retrieval (DPR), un modelo que utiliza representaciones densas de consultas y documentos para mejorar la precisión. El objetivo fue evaluar la efectividad de ambos métodos en términos de precisión y costo computacional.
+La recuperación de información es un campo fundamental en la ciencia de la computación, con aplicaciones que van desde motores de búsqueda hasta sistemas de recomendación. Este trabajo compara tres enfoques de recuperación de información: BM25, Dense Passage Retrieval (DPR) y un sistema híbrido de \textit{reranking}.
 
-\section{URL del Proyecto y Autores}
-El proyecto se encuentra alojado en GitHub y es accesible a través del siguiente enlace: \href{https://github.com/theGitNoob/SRI-Project}{SRI-Project}.
+\textbf{BM25} es un modelo probabilístico tradicional que estima la relevancia de un documento basándose en la frecuencia de las palabras clave en la consulta y el documento \cite{bm25}. A pesar de su simplicidad, BM25 es rápido y eficiente, pero tiene limitaciones al no capturar relaciones semánticas profundas entre los términos.
 
-\section{Descripción del Tema}
-La recuperación de información ha evolucionado desde métodos simples basados en coincidencias de palabras clave hasta enfoques más sofisticados que emplean técnicas de inteligencia artificial para capturar la semántica de las consultas. BM25 es un método probabilístico tradicional que ha sido ampliamente utilizado en sistemas de búsqueda. En contraste, DPR utiliza redes neuronales para generar embeddings densos que capturan el significado contextual de las consultas y los documentos, ofreciendo una recuperación más precisa en situaciones complejas.
+\textbf{DPR} (Dense Passage Retrieval), por otro lado, utiliza representaciones densas generadas por redes neuronales para capturar el significado semántico de las consultas y documentos \cite{dpr}. Al representar tanto la consulta como los documentos como vectores en un espacio de embeddings, DPR es capaz de recuperar información de manera más precisa, particularmente en casos donde la relevancia semántica juega un papel crucial.
+
+El \textbf{reranking} es una estrategia que combina lo mejor de ambos enfoques \cite{reranking}. En este caso, BM25 se usa como un filtro inicial para reducir el número de documentos candidatos, y posteriormente, DPR se emplea para realizar un reranking de los documentos filtrados. Esto permite mejorar la precisión sin incurrir en el costo computacional de aplicar DPR a todo el corpus.
 
 \section{Antecedentes}
-BM25 ha sido el estándar en recuperación de información durante varias décadas, siendo parte integral de muchos motores de búsqueda debido a su efectividad y simplicidad. Sin embargo, con el auge de la inteligencia artificial, han surgido métodos como DPR, que utilizan redes neuronales profundas para mejorar la precisión en la recuperación de información, especialmente en dominios donde la semántica es crucial. La capacidad de DPR para entender el contexto y el significado de las palabras lo diferencia de métodos tradicionales como BM25.
+BM25 ha sido el estándar en recuperación de información durante varias décadas debido a su balance entre simplicidad y efectividad. Sin embargo, en los últimos años, métodos más avanzados como DPR han demostrado una mejor capacidad para capturar relaciones semánticas complejas. Al utilizar embeddings densos generados por redes neuronales, DPR ofrece mejores resultados en dominios donde la semántica es fundamental. El reranking ha surgido como una técnica que busca optimizar la recuperación de información al combinar BM25 y DPR, permitiendo un sistema más escalable y preciso.
+\subsection{Conjunto de Datos}
+Para llevar a cabo la comparación entre los sistemas de recuperación de información, se utilizó el \href{https://www.kaggle.com/datasets/thedevastator/wikiquestionanswer-a-dataset-for-open-domain-que}{WikiQuestionAnswer Dataset}, disponible en Kaggle. Este conjunto de datos está compuesto por pares de preguntas y respuestas de dominio abierto, lo que permite evaluar la efectividad de los diferentes modelos en la recuperación de información.
 
-\section{Soluciones Implementadas}
-En este trabajo se implementaron dos sistemas:
+\subsection{Descripción de BM25, DPR y re-ranking con ambos modelos}
+
+\subsection*{BM25}
+
+BM25 es un modelo de recuperación de información clásico y ampliamente utilizado que pertenece a la familia de los modelos probabilísticos de recuperación. Su objetivo principal es estimar la relevancia de un documento con respecto a una consulta dada, basándose en la frecuencia de términos tanto en la consulta como en el documento. \\
+
+\textbf{Cómo funciona BM25:}
 \begin{itemize}
-    \item \textbf{BM25:} Utilizando la librería \texttt{rank\_bm25}, se implementó un sistema que calcula la relevancia de los documentos en función de la presencia de términos de consulta, ajustados por su frecuencia en el documento y en el corpus.
-    \item \textbf{DPR:} Se utilizó la librería \texttt{transformers} de Hugging Face para cargar un modelo preentrenado de DPR, que genera embeddings densos de consultas y documentos. La similitud entre estos embeddings se utilizó para determinar la relevancia de los documentos.
+    \item \textbf{Frecuencia de términos (TF):} BM25 considera cuántas veces aparece un término de la consulta en un documento. Cuanto más frecuente sea el término, mayor será su contribución a la puntuación de relevancia.
+    \item \textbf{Frecuencia inversa de documentos (IDF):} Este componente da más peso a los términos que son raros en la colección de documentos. Un término que aparece en muchos documentos es menos discriminativo.
+    \item \textbf{Normalización por longitud del documento:} BM25 incluye un factor que penaliza o favorece documentos según su longitud, evitando que documentos más largos obtengan puntuaciones injustamente altas solo por contener más términos.
+\end{itemize}
+
+La fórmula básica de BM25 es:
+
+\[
+\text{Score}(D, Q) = \sum_{q_i \in Q} \text{IDF}(q_i) \cdot \frac{f(q_i, D) \cdot (k_1 + 1)}{f(q_i, D) + k_1 \cdot (1 - b + b \cdot \frac{|D|}{\text{avgdl}})}
+\]
+
+Donde:
+\begin{itemize}
+    \item $f(q_i, D)$ es la frecuencia del término $q_i$ en el documento $D$.
+    \item $|D|$ es la longitud del documento $D$.
+    \item $\text{avgdl}$ es la longitud promedio de los documentos en la colección.
+    \item $k_1$ y $b$ son parámetros de ajuste.
+\end{itemize}
+
+\textbf{Uso de BM25:}
+BM25 se utiliza comúnmente en motores de búsqueda y sistemas de recuperación de información para ordenar documentos en función de su relevancia respecto a una consulta. Es eficiente computacionalmente y ofrece un buen equilibrio entre precisión y simplicidad.
+
+\subsection*{Dense Passage Retrieval (DPR)}
+DPR es un enfoque moderno para la recuperación de información basado en modelos de aprendizaje profundo, específicamente en representaciones densas aprendidas mediante redes neuronales. A diferencia de métodos tradicionales como BM25, que utilizan representaciones dispersas basadas en términos, DPR utiliza \emph{embeddings} de alta dimensión para representar consultas y documentos.\\
+
+\textbf{Cómo funciona DPR:}
+\begin{itemize}
+    \item \textbf{Representación Densa:} Tanto las consultas como los pasajes de documentos se representan mediante vectores densos en un espacio de alta dimensión.
+    \item \textbf{Modelos BERT Independientes:} DPR utiliza dos modelos BERT separados para las consultas y los pasajes, permitiendo capturar características específicas de cada uno.
+    \item \textbf{Función de Similaridad:} La relevancia entre una consulta y un pasaje se mide mediante la similitud coseno o producto escalar entre sus vectores.
+    \item \textbf{Entrenamiento Supervisado:} DPR se entrena utilizando pares de consultas y pasajes relevantes, optimizando para que los pasajes relevantes estén más cerca de la consulta en el espacio vectorial.
+\end{itemize}
+
+\textbf{Uso de DPR:}
+DPR es efectivo en tareas de búsqueda semántica y recuperación de respuestas en sistemas de Preguntas y Respuestas (QA). Captura relaciones semánticas más allá de la coincidencia exacta de términos, lo que permite recuperar documentos relevantes que no comparten necesariamente palabras con la consulta.
+
+\subsection*{Re-ranking usando BM25 y DPR}
+El proceso de \emph{re-ranking} combina las fortalezas de ambos modelos para mejorar la precisión de la recuperación de información.\\
+
+\textbf{Cómo es el proceso:}
+\begin{enumerate}
+    \item \textbf{Recuperación Inicial con BM25:}
+    Se utilizó BM25 para realizar una recuperación inicial de documentos o pasajes. BM25 es rápido y eficiente, lo que permite filtrar rápidamente un conjunto amplio de documentos y obtener un conjunto candidato de, por ejemplo, los top 100 documentos más relevantes.
+    
+    \item \textbf{Re-ranking con DPR:}
+    Se aplicó DPR al conjunto candidato obtenido de BM25. Se calcularon las representaciones densas de las consultas y los pasajes candidatos y luego se recalcularon las puntuaciones de relevancia basándose en la similitud de los \emph{embeddings}. Finalmente se ordenaron nuevamente los documentos según las nuevas puntuaciones obtenidas con DPR.
+\end{enumerate}
+
+\textbf{Ventajas de este enfoque:}
+\begin{itemize}
+    \item \textbf{Eficiencia:} BM25 filtra rápidamente los documentos menos relevantes, reduciendo la carga computacional para DPR.
+    \item \textbf{Precisión:} DPR refina el \emph{ranking} inicial considerando relaciones semánticas profundas, mejorando la relevancia de los resultados finales.
+    \item \textbf{Combina lo Mejor de Ambos Mundos:} Aprovecha la rapidez de los métodos tradicionales y la precisión de los modelos neuronales.
 \end{itemize}
 
 \section{Consideraciones Implementadas}
 Al implementar estos sistemas, se tomaron en cuenta las siguientes consideraciones:
 \begin{itemize}
-    \item \textbf{Complejidad vs. Precisión:} BM25 fue seleccionado por su simplicidad y bajo costo computacional, mientras que DPR fue elegido por su capacidad para capturar relaciones semánticas complejas, aunque con un costo computacional más alto.
-    \item \textbf{Escalabilidad:} Se evaluó la escalabilidad de ambos métodos, considerando el tiempo de respuesta y el uso de recursos, especialmente en grandes volúmenes de datos.
-    \item \textbf{Contexto de la Consulta:} DPR se priorizó en consultas donde la interpretación del contexto era crucial, mientras que BM25 se utilizó en consultas más simples y directas.
+    \item \textbf{Complejidad vs. Precisión:} BM25 fue seleccionado por su simplicidad y bajo costo computacional, mientras que DPR fue elegido por su capacidad para capturar relaciones semánticas complejas. El reranking se utilizó para equilibrar ambas características, aplicando BM25 como un primer filtro y DPR para refinar los resultados más relevantes.
+    \item \textbf{Escalabilidad:} Se evaluó la escalabilidad de ambos métodos, considerando el tiempo de respuesta y el uso de recursos, especialmente en grandes volúmenes de datos. El reranking permitió mejorar la escalabilidad al reducir el número de documentos que DPR debía procesar.
+    \item \textbf{Contexto de la Consulta:} DPR y el reranking se priorizaron en consultas donde la interpretación del contexto era crucial, mientras que BM25 se utilizó en consultas más simples y directas.
 \end{itemize}
 
 \section{Evaluación Cuantitativa y Cualitativa}
 \subsection{Evaluación Cuantitativa}
-La precisión de ambos sistemas se evaluó utilizando la métrica de Exact Match Ratio en un conjunto de pruebas compuesto por 100 consultas. Los resultados fueron los siguientes:
-\begin{itemize}
-    \item \textbf{BM25:} 0.57
-    \item \textbf{DPR:} 0.60
-\end{itemize}
+
+A continuación, se presentan los resultados obtenidos de la comparación entre los sistemas de recuperación de información BM25, DPR, y Reranking. Los resultados se expresan en términos de Precisión Media (Average Precision) y Recall Medio (Average Recall).
+
+\begin{table}[H]
+\centering
+\caption{Resultados de Precisión Media}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Sistema}   & \textbf{Precisión Media} \\ \hline
+BM25               & 0.324                     \\ \hline
+DPR                & 0.531                     \\ \hline
+Reranking          & 0.4969                    \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Resultados de Recall Medio}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Sistema}   & \textbf{Recall Medio} \\ \hline
+BM25               & 0.4053                    \\ \hline
+DPR                & 0.5853                    \\ \hline
+Reranking          & 0.4496                    \\ \hline
+\end{tabular}
+\end{table}
+
+Se observa que el modelo DPR supera a BM25 y Reranking en ambas métricas, con una precisión media de 0.531 y un recall medio de 0.5853. Aunque Reranking mejora respecto a BM25 en precisión, su rendimiento es inferior en términos de recall comparado con DPR.
 
 \subsection{Evaluación Cualitativa}
-Cualitativamente, se observó que DPR tenía un mejor desempeño en consultas complejas donde la semántica del contexto era crucial. BM25, aunque menos preciso en estos casos, se destacó en consultas simples y fue significativamente más rápido.
-Si bien es cierto que ambos alcanzan un porcentaje de precisión algo parecido, es notable cómo solo DPR es capaz de captar el contexto en el siguiente ejemplo:
+Cualitativamente, se observó que el reranking permitía una recuperación más precisa, particularmente en consultas complejas donde la semántica del contexto era crucial. BM25, aunque menos preciso, se destacó en consultas simples y fue significativamente más rápido. El reranking balanceó ambos enfoques, mejorando la precisión sin aumentar excesivamente el costo computacional.
 
-\begin{itemize}
-    \item \textbf{Consulta:} Why whenever I get in the shower my girlfriend want to join?
-    \vspace{0.3cm}
-    \item \textbf{Resultados de DPR:} They would have hot rough sex, or kill each other. This is a really dumb question.
-    \vspace{0.3cm}
-    \item \textbf{Resultados de BM25:} Don't let apps that are liers put adds on your site. Like ones that say they have free age verification, but try charging your card. There all fucking liers, just dont understand why sites promote them and let them post there lies on your site. Also if you want your site to be better, when I click on mature anal lover's. It does not go to that it goes to a lying BS hook up site, that charges you for age verification. Like mature women just a bummer I can't get to the site. Big waist of my time really. Sure your making money from the bastards, if not making money from them. Your getting screwed then.
-\end{itemize}
+
 
 \section{Declaración Autocrítica y Propuestas de Mejora}
 A pesar de los resultados obtenidos, se reconocen varias limitaciones en la implementación:
 \begin{itemize}
-    \item \textbf{Costo Computacional de DPR:} Aunque DPR fue más preciso, su alto costo computacional lo hace menos práctico en entornos con recursos limitados. Se sugiere explorar técnicas de optimización como la reducción de la dimensionalidad o el uso de modelos más ligeros.
-    \item \textbf{Limitaciones de BM25:} 
-    BM25 no es capaz de capturar relaciones semánticas complejas, lo que limita su efectividad en ciertas consultas. Un enfoque híbrido podría combinar lo mejor de ambos métodos, utilizando BM25 para consultas simples y DPR para las más complejas.
+    \item \textbf{Costo Computacional de DPR:} Aunque DPR fue más preciso, su alto costo computacional lo hace menos práctico en entornos con recursos limitados. El reranking ayudó a mitigar este problema, pero se sugiere explorar técnicas de optimización adicionales, como la reducción de la dimensionalidad de los embeddings.
+    \item \textbf{Limitaciones de BM25:} BM25 no es capaz de capturar relaciones semánticas complejas, lo que limita su efectividad en ciertas consultas. El reranking ayudó a mejorar este aspecto, pero podría evaluarse la posibilidad de aplicar otros métodos de inteligencia artificial para consultas más complejas.
     \item \textbf{Generalización en Diferentes Dominios:} Los experimentos se realizaron en un conjunto de datos específico. Se propone realizar pruebas en diferentes dominios y con otros tipos de consultas para evaluar la generalización de los resultados.
+    \item\textbf{Limitaciones computacionales:}
+    Con una infraestructura más adecuada se podrían haber ejecutado pruebas más complejas utilizando incluso datasets más grandes y complejos 
+    
 \end{itemize}
 
 \section{Conclusión}
-Este trabajo comparó dos enfoques de recuperación de información: BM25, un método tradicional, y DPR, un modelo basado en inteligencia artificial. Aunque DPR mostró una mayor precisión en la recuperación de información semánticamente compleja, su alto costo computacional es una desventaja significativa. Un enfoque híbrido podría combinar la simplicidad y rapidez de BM25 con la precisión de DPR para lograr un equilibrio óptimo entre ambos.
+Este trabajo comparó tres enfoques de recuperación de información: BM25, DPR y una estrategia híbrida de reranking. Mientras que BM25 mostró una gran eficiencia, DPR destacó por su precisión en consultas complejas. El reranking permitió aprovechar lo mejor de ambos enfoques, mejorando la precisión sin sacrificar significativamente la eficiencia computacional. Un enfoque híbrido como el de reranking parece ser una solución prometedora para futuros sistemas de recuperación de información.
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]
-    {img/tiempo_computo_comparacion.png}
+    {img/precision_comparation.png}
+    \caption{Uso de CPU}
+    \label{fig:bm25_cpu_memory}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]
+    {img/recall_comparation.png}
+    \caption{Uso de CPU}
+    \label{fig:bm25_cpu_memory}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]
+    {img/time_comparation.png}
     \caption{Uso de CPU}
     \label{fig:bm25_cpu_memory}
 \end{figure}
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.7\textwidth]{img/uso_memoria_comparacion.png}
-    \caption{Uso de memoria}
-    \label{fig:dpr_cpu_memory}
-\end{figure}
+
 
 \section{Bibliografía}
 \begin{thebibliography}{8}
+
 \bibitem{bm25}
-Robertson, S., Zaragoza, H.: The Probabilistic Relevance Framework: BM25 and Beyond. \emph{Foundations and Trends in Information Retrieval}, \textbf{3}(4), 333--389 (2009).
+Robertson, S., Zaragoza, H.: The Probabilistic Relevance Framework: BM25 and Beyond. \emph{Foundations and Trends in Information Retrieval}, \textbf{3}(4), 333--389 (2009). \href{https://www.researchgate.net/publication/220613776_The_Probabilistic_Relevance_Framework_BM25_and_Beyond}{BM25}
 
 \bibitem{dpr}
-Karpukhin, V., Oguz, B., Min, S., Lewis, P., Wu, L., Edunov, S., et al.: Dense Passage Retrieval for Open-Domain Question Answering. In \emph{Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)}, 6769--6781 (2020).
+Karpukhin, V., Oguz, B., Min, S., Lewis, P., Wu, L., Edunov, S., et al.: Dense Passage Retrieval for Open-Domain Question Answering. In \emph{Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)}, 6769--6781 (2020). \href{https://arxiv.org/abs/2004.04906}{DPR}
 
-\bibitem{transformers}
-Wolf, T., Debut, L., Sanh, V., Chaumond, J., Delangue, C., Moi, A., et al.: Transformers: State-of-the-Art Natural Language Processing. \emph{Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing: System Demonstrations}, 38--45 (2020).
+\bibitem{reranking}
+Jia-Huei Ju, Jheng-Hong Yang, and Chuan-Ju Wang. 2021. Text-to-text multiview learning for passage re-ranking. In Proceedings of the 44th International ACM SIGIR Conference on Research and Development in Information Retrieval. \href{https://arxiv.org/abs/2104.14133}{Reranking}
+
+\bibitem{chuang2023expandrerankretrievequery}
+Yung-Sung Chuang, Wei Fang, Shang-Wen Li, Wen-tau Yih, and James Glass. 2023. Expand, Rerank, and Retrieve: Query Reranking for Open-Domain Question Answering. \href{https://arxiv.org/abs/2305.17080}{arXiv:2305.17080}.
+
+
 
 \end{thebibliography}
 
-\end{document}
 
+
+
+\end{document}
+    
