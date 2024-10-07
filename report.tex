@@ -50,11 +50,12 @@ BM25 es un modelo de recuperación de información clásico y ampliamente utiliz
     \item \textbf{Normalización por longitud del documento:} BM25 incluye un factor que penaliza o favorece documentos según su longitud, evitando que documentos más largos obtengan puntuaciones injustamente altas solo por contener más términos.
 \end{itemize}
 
+
 La fórmula básica de BM25 es:
 
 \[
 \text{Score}(D, Q) = \sum_{q_i \in Q} \text{IDF}(q_i) \cdot \frac{f(q_i, D) \cdot (k_1 + 1)}{f(q_i, D) + k_1 \cdot (1 - b + b \cdot \frac{|D|}{\text{avgdl}})}
-\]
+\]\cite{okapibm25}
 
 Donde:
 \begin{itemize}
@@ -73,8 +74,8 @@ DPR es un enfoque moderno para la recuperación de información basado en modelo
 \textbf{Cómo funciona DPR:}
 \begin{itemize}
     \item \textbf{Representación Densa:} Tanto las consultas como los pasajes de documentos se representan mediante vectores densos en un espacio de alta dimensión.
-    \item \textbf{Modelos BERT Independientes:} DPR utiliza dos modelos BERT separados para las consultas y los pasajes, permitiendo capturar características específicas de cada uno.
-    \item \textbf{Función de Similaridad:} La relevancia entre una consulta y un pasaje se mide mediante la similitud coseno o producto escalar entre sus vectores.
+    \item \textbf{Modelos BERT Independientes:} DPR utiliza dos modelos BERT\cite{bert} separados para las consultas y los pasajes, permitiendo capturar características específicas de cada uno.
+    \item \textbf{Función de Similaridad:} La relevancia entre una consulta y un pasaje se mide mediante la similitud coseno\cite{cosine} o producto escalar entre sus vectores.
     \item \textbf{Entrenamiento Supervisado:} DPR se entrena utilizando pares de consultas y pasajes relevantes, optimizando para que los pasajes relevantes estén más cerca de la consulta en el espacio vectorial.
 \end{itemize}
 
@@ -162,21 +163,21 @@ Este trabajo comparó tres enfoques de recuperación de información: BM25, DPR 
     \centering
     \includegraphics[width=0.7\textwidth]
     {img/precision_comparation.png}
-    \caption{Uso de CPU}
+    \caption{Comparación de la métrica Precition}
     \label{fig:bm25_cpu_memory}
 \end{figure}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]
     {img/recall_comparation.png}
-    \caption{Uso de CPU}
+    \caption{Comparación de la métrica  Recall}
     \label{fig:bm25_cpu_memory}
 \end{figure}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]
     {img/time_comparation.png}
-    \caption{Uso de CPU}
+    \caption{Tiempo de Computo}
     \label{fig:bm25_cpu_memory}
 \end{figure}
 
@@ -197,7 +198,16 @@ Jia-Huei Ju, Jheng-Hong Yang, and Chuan-Ju Wang. 2021. Text-to-text multiview le
 \bibitem{chuang2023expandrerankretrievequery}
 Yung-Sung Chuang, Wei Fang, Shang-Wen Li, Wen-tau Yih, and James Glass. 2023. Expand, Rerank, and Retrieve: Query Reranking for Open-Domain Question Answering. \href{https://arxiv.org/abs/2305.17080}{arXiv:2305.17080}.
 
+\bibitem{bert}
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2019. BERT: Pre-training of deep bidirectional transformers for language understanding. In Proceedings of the North American Chapter of the Association for Computational Linguistics. \href{https://api.semanticscholar.org/CorpusID:52967399}{BERT}.
 
+\bibitem{cosine}
+Ross Wilkinson and Philip Hingston. 1991. Using the cosine measure in a neural network for document retrieval. In Proceedings of the 14th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR '91). Association for Computing Machinery, New York, NY, USA, 202–210. \href{https://doi.org/10.1145/122860.122880}{Cosine Measure}.
+
+
+\bibitem{okapibm25}
+Okapi BM25. \href{https://es.wikipedia.org/wiki/Okapi_BM25}
+{Okapi_BM25}.
 
 \end{thebibliography}
 
